@@ -1,6 +1,5 @@
-import pynput
 from pynput import keyboard
-
+import pynput 
 class KeyLogger:
     # Map the special keys to their respective characters
     key_map = {
@@ -39,4 +38,5 @@ class KeyLogger:
             # Prints the keystrokes
             print("Filtered Text: " + self.log) # Prints the keystrokes without the special keys
             print("Complete Text: " + self.complete) # Prints the keystrokes with the special keys
-            return False # Stop the listener
+            raise pynput.StopException # Stop the listener
+            # return False # Stop the listener
