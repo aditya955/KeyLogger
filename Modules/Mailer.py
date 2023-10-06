@@ -21,10 +21,7 @@ class Mailer:
 
     # Sends Email with Attachments
     # Returns True if Successful, else False
-    def attachment_mail(self, to, subject, attachment, body=None, mimetype="plain", subtype="csv"):
-        if(not os.path.exists(attachment)):
-            return False
-        
+    def attachment_mail(self, to, subject, attachments, body=None, mimetype="plain", subtype="csv"):
         # Create a multipart message and set headers
         message = MIMEMultipart()
         message["From"] = self.email
@@ -35,26 +32,29 @@ class Mailer:
         if(body):
             message.attach(MIMEText(body, "plain"))
 
-        filename = attachment
-        part = MIMEBase(mimetype, subtype)
-        with open(filename, "rb") as attachment:
-            part.set_payload(attachment.read())
+        for attachment in attachments:
+            if(not os.path.exists(attachment)):
+                return False
+            filename = os.path.basename(attachment)
+            part = MIMEBase(mimetype, subtype)
+            with open(filename, "rb") as attachment:
+                part.set_payload(attachment.read())
 
-        # Encode file in ASCII characters to send by email    
-        encoders.encode_base64(part)
+            # Encode file in ASCII characters to send by email    
+            encoders.encode_base64(part)
 
-        # Add header as key/value pair to attachment part
-        part.add_header(
-            "Content-Disposition",
-            f"attachment; filename= {filename}",
-        )
+            # Add header as key/value pair to attachment part
+            part.add_header(
+                "Content-Disposition",
+                f"attachment; filename= {filename}",
+            )
 
-        # Add attachment to message and convert message to string
-        message.attach(part)
+            # Add attachment to message and convert message to string
+            message.attach(part)
+
         text = message.as_string()
 
         with smtplib.SMTP_SSL(host=self.host, port=self.port, context=self.context) as server:
             server.login(self.email, self.password)
             server.sendmail(self.email, to, text)
-        print("Sent Mail Successfully")
         return True
